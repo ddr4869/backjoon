@@ -15,17 +15,13 @@ def seperateUV(formula):
         return None, None
     u,v,cnt ='','',0
     tmp=deque(formula)
-    print(u)
     for i in formula:
         if i=='(': cnt+=1
         else:  cnt-=1    
-        u+=str(tmp.popleft())
-        #u+=val
+        u+=tmp.popleft()
         if cnt==0:
             v=''.join(tmp)
             break
-    print("u:",u)
-    print("v:",v)
     return u,v
 
 def process(w):
