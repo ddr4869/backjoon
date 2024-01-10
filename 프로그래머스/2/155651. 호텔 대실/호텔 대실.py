@@ -15,12 +15,12 @@ def solution(book_time):
     out.sort()
     cIdx, oIdx, cnt = 0,0,0
     time=come[0]
-    
-    while(time<=come[-1]):
+    come.append(10000); out.append(10000)
+    while(time<=come[-2]):
         while(oIdx<len(book_time) and time==out[oIdx]):
             cnt-=1; oIdx+=1
         while(cIdx<len(book_time) and time==come[cIdx]):
             cnt+=1; cIdx+=1
             if cnt>answer: answer+=1
-        time+=1
+        time=min(out[oIdx], come[cIdx])
     return answer
