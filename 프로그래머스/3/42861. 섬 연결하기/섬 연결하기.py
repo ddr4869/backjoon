@@ -26,9 +26,8 @@ def solution(n, costs):
         if visited[next_[1]]: continue # 이미 방문시
         answer+=next_[0]
         visited[next_[1]]=1
-        for i in dict[next_[1]]:
-            if visited[i[1]]==0:
-                heapq.heappush(dist,i)
-        #dist+=dict[next_[1]]
+        for vertex in dict[next_[1]]:
+            if visited[vertex[1]]==0:
+                heapq.heappush(dist,vertex)
         cnt+=1
     return answer
