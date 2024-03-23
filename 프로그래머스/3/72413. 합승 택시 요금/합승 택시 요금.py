@@ -1,34 +1,26 @@
 from collections import defaultdict, deque
 def solution(n, s, a, b, fares):
-    link=defaultdict(list)
+    dp=[[10e10 for _ in range(n+1)] for _ in range(n+1)]
+
     for start,arrive,cost in fares:
-        link[start].append((arrive,cost))
-        link[arrive].append((start,cost))
+        dp[start][arrive]=cost
+        dp[arrive][start]=cost
     
-    def calc_distance(_from,_to):
-        if _from==_to: return 0
-        dp=[10e10 for _ in range(n+1)]
-        ans=[]
-        dq=deque()
-        dq.append((_from,0))
-        while(dq):
-            now,cost=dq.popleft()
-            if now==_to: 
-                ans.append(cost)
-                continue
-            if dp[now]<cost: continue
-            _next_list=link[now]
-            for _next,_next_cost in _next_list:
-                if cost+_next_cost >= dp[_next]: continue
-                dp[_next]=cost+_next_cost
-                dq.append((_next,cost+_next_cost))
-        return min(ans) if ans else -1
+    for i in range(n+1):
+        dp[i][i]=0
+
+    ans=[]
+    for k in range(1,n+1):
+        for i in range(1,n+1):
+            for j in range(1,n+1):
+                if dp[i][j]>dp[i][k]+dp[k][j]:
+                    dp[i][j]=dp[i][k]+dp[k][j]
     
     answer=10e10
+
     for i in range(1,n+1):
-        StoI=calc_distance(s,i)
-        if StoI==-1: continue
-        ItoA=calc_distance(i,a)
-        ItoB=calc_distance(i,b)
+        StoI=dp[s][i]
+        ItoA=dp[i][a]
+        ItoB=dp[i][b]
         answer=min(answer, StoI+ItoA+ItoB)
     return answer
