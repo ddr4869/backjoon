@@ -1,5 +1,4 @@
-from collections import defaultdict
-import heapq
+from collections import defaultdict, deque
 def solution(n, s, a, b, fares):
     link=defaultdict(list)
     for start,arrive,cost in fares:
@@ -10,10 +9,10 @@ def solution(n, s, a, b, fares):
         if _from==_to: return 0
         dp=[10e10 for _ in range(n+1)]
         ans=[]
-        stack=[]
-        stack.append((_from,0))
-        while(stack):
-            now,cost=heapq.heappop(stack)
+        dq=deque()
+        dq.append((_from,0))
+        while(dq):
+            now,cost=dq.popleft()
             if now==_to: 
                 ans.append(cost)
                 continue
@@ -22,7 +21,7 @@ def solution(n, s, a, b, fares):
             for _next,_next_cost in _next_list:
                 if cost+_next_cost >= dp[_next]: continue
                 dp[_next]=cost+_next_cost
-                heapq.heappush(stack,(_next,cost+_next_cost))
+                dq.append((_next,cost+_next_cost))
         return min(ans) if ans else -1
     
     answer=10e10
