@@ -1,29 +1,25 @@
+import heapq
 import sys
+from collections import defaultdict
 input = sys.stdin.readline
-
-def find(parent, a):
-    if parent[a]==a: return a
-    else: return find(parent, parent[a])
-
-def union(parent, a, b):
-    A=find(parent, a)
-    B=find(parent, b)
-    parent[A]=B
-
 v=int(input())
 e=int(input())
-parent=[i for i in range(v+1)]
-
-edges=[]
-for i in range(e):
+edges=defaultdict(list)
+for _ in range(e):
     a,b,cost=list(map(int, input().split()))
-    edges.append((cost,a,b))
-edges.sort()
+    edges[a].append((cost,b))
+    edges[b].append((cost,a))
 
+h=[]; cnt=1
+heapq.heappush(h, (0, 1))
+visited=[False for _ in range(v+1)]
 answer=0
-for cost,a,b in edges:
-    if find(parent,a)!=find(parent,b):
-        answer+=cost
-        union(parent,a,b)
-    else: continue
+while(h):
+    cost,here= heapq.heappop(h)
+    if visited[here]: continue
+    visited[here]=True
+    answer+=cost
+    for next_cost,_next in edges[here]:
+        if not visited[_next]:
+            heapq.heappush(h, (next_cost,_next))
 print(answer)
