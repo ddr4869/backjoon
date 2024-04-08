@@ -1,21 +1,25 @@
-def find(parent, x):
-    if parent[x] == x: return x
-    else: return find(parent, parent[x])
-
-def union(parent, x, y):
-    rootX = find(parent, x)
-    rootY = find(parent, y)
-    parent[rootY] = rootX
-
+# 프림
+import heapq
+import sys
+from collections import defaultdict
+input = sys.stdin.readline
 v,e=list(map(int, input().split()))
-parent=[i for i in range(v+1)] 
-edges=[]; answer=0
+edges=defaultdict(list)
 for _ in range(e):
-    a, b, cost = map(int, input().split())
-    edges.append((cost, a, b))
-edges.sort()
-for cost,a,b in edges:
-    if find(parent, a) != find(parent, b):
-      union(parent, a, b)
-      answer+=cost
+    a,b,cost=list(map(int, input().split()))
+    edges[a].append((cost,b))
+    edges[b].append((cost,a))
+
+h=[]; cnt=1
+heapq.heappush(h, (0, 1))
+visited=[False for _ in range(v+1)]
+answer=0
+while(h):
+    cost,here= heapq.heappop(h)
+    if visited[here]: continue
+    visited[here]=True
+    answer+=cost
+    for next_cost,_next in edges[here]:
+        if not visited[_next]:
+            heapq.heappush(h, (next_cost,_next))
 print(answer)
