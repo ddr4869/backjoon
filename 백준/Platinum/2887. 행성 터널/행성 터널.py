@@ -33,15 +33,10 @@ def find(parent, a):
 def union(parent, a, b):
     rootA=find(parent, a)
     rootB=find(parent, b)
-    if rootA == rootB:
-        return
-    if rank[rootA] < rank[rootB]:
-        parent[rootA] = rootB
+    if rootA < rootB:
+        parent[rootB]=rootA
     else:
-        parent[rootB] = rootA
-        if rank[rootA] == rank[rootB]:
-            rank[rootA] += 1    
-
+        parent[rootA]=rootB
 while(dist):
     cost, start, arrive = heapq.heappop(dist)
     if find(parent, start) != find(parent, arrive):
