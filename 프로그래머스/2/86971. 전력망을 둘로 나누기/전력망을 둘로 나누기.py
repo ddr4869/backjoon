@@ -1,27 +1,24 @@
-from collections import defaultdict
-
+from collections import defaultdict, deque
 def solution(n, wires):
-    answer = 100
     link=defaultdict(list)
-    for a,b in wires:
-        link[a].append(b)
-        link[b].append(a)
-
-    def calc(node, _from, link, visited):
-        visited[node]=1
-        network=link[node]
+    answer = 100
+    for v1,v2 in wires:
+        link[v1].append(v2)
+        link[v2].append(v1)
+    
+    for v1,v2 in wires:
+        link[v1].remove(v2)
+        dq=deque([v1])
+        visited=[False for _ in range(n+1)]
+        visited[v1]=True
         cnt=1
-        for _next in network:
-            if _next==_from or visited[_next]==1: continue
-            cnt+=calc(_next, node, link, visited)
-        return cnt
-
-    for _from, _to in wires:
-        visited=[0 for _ in range(n+1)]
-        from_total=calc(_from, _to, link, visited)
-        to_total=n-from_total
-        gap=from_total-to_total
-        if gap<0: gap*=-1
-        answer=min(answer, gap)
-
+        while(dq):
+            here=dq.popleft()
+            for _next in link[here]:
+                if not visited[_next]:
+                    dq.append(_next)
+                    visited[_next]=True
+                    cnt+=1
+        answer=min(answer, abs(n-2*cnt))
+        link[v1].append(v2)
     return answer
