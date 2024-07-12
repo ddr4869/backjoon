@@ -10,5 +10,5 @@ def solution(n, s):
         answer.append(math.floor(s/n))
     for i in range(upper_num):
         answer.append(math.ceil(s/n))
-
+    answer.sort()
     return answer
